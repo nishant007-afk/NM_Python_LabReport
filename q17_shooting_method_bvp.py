@@ -11,16 +11,16 @@
 #    s=s1+(0.25-y1)*(s2-s1)/(y2-y1).
 # 6. Integrate again using the estimated slope and report the BVP solution values.
 
-pi=3.141592653589793
-h=pi/24
+import math
+import numpy as np
+h=math.pi/24
 
-def rhs(Y): return [Y[1],-4*Y[0]]
-def add(Y,Z,c=1.0): return [Y[0]+c*Z[0],Y[1]+c*Z[1]]
+def rhs(Y): return np.array([Y[1],-4*Y[0]],float)
 def integrate(s):
-    Y=[0.0,s]; x=0.0
+    Y=np.array([0.0,s]); x=0.0
     for _ in range(2):
-        k1=rhs(Y); k2=rhs(add(Y,k1,h/2)); k3=rhs(add(Y,k2,h/2)); k4=rhs(add(Y,k3,h))
-        Y=[Y[0]+h*(k1[0]+2*k2[0]+2*k3[0]+k4[0])/6,Y[1]+h*(k1[1]+2*k2[1]+2*k3[1]+k4[1])/6]; x+=h
+        k1=rhs(Y); k2=rhs(Y+h*k1/2); k3=rhs(Y+h*k2/2); k4=rhs(Y+h*k3)
+        Y=Y+h*(k1+2*k2+2*k3+k4)/6; x+=h
     return Y
 s1,s2=0.0,1.0
 y1=integrate(s1)[0]; y2=integrate(s2)[0]

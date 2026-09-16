@@ -12,6 +12,7 @@
 #    or h^2 (second derivative).
 # 5. Evaluate at p=-2.
 
+import math
 x=[0,0.2,0.4,0.6,0.8,1]
 y=[0.0000,0.1987,0.3894,0.5646,0.7174,0.8415]
 h=0.2
@@ -22,11 +23,10 @@ while len(table[-1])>1:
 back=[table[k][-1] for k in range(len(table))]
 p=(0.6-x[-1])/h
 # Derivatives of the backward basis p(p+1)...(p+k-1)/k! computed numerically by products.
-F=[1,1,2,6,24,120]
 def basis(k,p):
     r=1.0
     for j in range(k): r*=p+j
-    return r/F[k]
+    return r/math.factorial(k)
 def basis_d1(k,p):
     if k==0:return 0.0
     s=0.0
@@ -35,7 +35,7 @@ def basis_d1(k,p):
         for j in range(k):
             if j!=m: prod*=p+j
         s+=prod
-    return s/F[k]
+    return s/math.factorial(k)
 def basis_d2(k,p):
     if k<2:return 0.0
     s=0.0
@@ -46,7 +46,7 @@ def basis_d2(k,p):
             for j in range(k):
                 if j!=m and j!=r: prod*=p+j
             s+=prod
-    return s/F[k]
+    return s/math.factorial(k)
 d1=sum(back[k]*basis_d1(k,p) for k in range(len(back)))/h
 d2=sum(back[k]*basis_d2(k,p) for k in range(len(back)))/h**2
 print("Backward differences =", back)
